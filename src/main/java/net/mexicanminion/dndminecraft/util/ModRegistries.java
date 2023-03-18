@@ -10,6 +10,6 @@ public class ModRegistries {
 
 	private static class registerCommands {
 		//CommandRegistrationCallback
-		
+
 	}
 }
