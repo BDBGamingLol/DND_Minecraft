@@ -1,0 +1,43 @@
+package net.mexicanminion.dndminecraft.command;
+
+import static net.minecraft.server.command.CommandManager.*;
+
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.mexicanminion.dndminecraft.util.DiceSystem;
+import net.minecraft.command.CommandBuildContext;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+import static net.minecraft.server.command.CommandManager.argument;
+
+import static net.minecraft.command.argument.IdentifierArgumentType.getIdentifier;
+import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
+
+
+public class RollDiceCommand{
+
+	static int amount;
+	static DiceSystem diceSystem = new DiceSystem();
+
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext commandBuildContext, RegistrationEnvironment registrationEnvironment) {
+		dispatcher.register(CommandManager.literal("RollDice")
+				.then(argument("amount", integer())
+						.then(argument("dice", integer(4, 100))
+								.executes(context -> run(context, context.getSource(), getInteger(context, "amount"), getInteger(context, "dice"))))));
+	}
+
+	private static int run(CommandContext<ServerCommandSource> contextScreen, ServerCommandSource context, int amount, int dice) throws CommandSyntaxException {
+
+		int temp = diceSystem.rollDice(amount, dice);
+
+		contextScreen.getSource().sendFeedback(Text.literal("You rolled " + temp), true);
+
+		return 1;
+	}
+
+
+}
