@@ -6,6 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 
+
 import java.util.HashMap;
 
 
@@ -13,38 +14,44 @@ public class GameTrackerManager {
 
 	public static HashMap<ServerPlayerEntity, Integer> playersTurn = new HashMap<ServerPlayerEntity, Integer>();
 	public static HashMap<ServerPlayerEntity, MovementSpeed> playerMove = new HashMap<ServerPlayerEntity, MovementSpeed>();
-	static int currTurn = 0;
+	static int currTurn = 1;
+	static int playerCount = 0;
 	public static boolean gameStarted = false;
 
-	public static void addPlayerToGame(ServerPlayerEntity player) {
-		playersTurn.put(player, 0);
-		playerMove.put(player, new MovementSpeed(10, player));
-	}
-
-	public static void setPlayersTurn(MinecraftServer server) {
-		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-			if(!playersTurn.containsKey(player)) {
-				addPlayerToGame(player);
-				player.sendMessage(Text.literal("You have been added to the game"), false);
-			}
-		}
-	}
-
-	/*public static void setPlayersInGame(PlayerLookup playerLookup, MinecraftServer server) {
-		for (ServerPlayerEntity player : playerLookup.all(server)) {
-			addPlayerToGame(player);
-		}
-	}*/
-
-	public static void updatePlayersMovement(MinecraftServer minecraftServer){
+	public static void updatePlayersMovement(MinecraftServer server){
 		if (!gameStarted) {
-			setPlayersTurn(minecraftServer);
 			return;
 		}
 		for (ServerPlayerEntity player : playersTurn.keySet()) {
 			if(getPlayerTurn(player) == currTurn) {
 				getPlayerMovementSpeed(player).checkMovement();
+			}else {
+				getPlayerMovementSpeed(player).resetMovement();
 			}
+		}
+	}
+
+	public static void startGame(MinecraftServer server) {
+		if (playerCount == 0) {
+			for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+				player.sendMessage(Text.literal("No players in game, could not start"), false);
+			}
+			return;
+		}
+		gameStarted = true;
+		setmainPlayerPosServerWide(server);
+	}
+
+	public static void addPlayerToGame(ServerPlayerEntity player, int turn, int speed) {
+		playersTurn.put(player, turn);
+		playerMove.put(player, new MovementSpeed(speed, player));
+	}
+
+	public static void addPlayerToGame(ServerPlayerEntity player,int speed) {
+		if(!playersTurn.containsKey(player)) {
+			playerCount++;
+			addPlayerToGame(player, playerCount, speed);
+			player.sendMessage(Text.literal("You have been added to the game"), false);
 		}
 	}
 
@@ -62,6 +69,8 @@ public class GameTrackerManager {
 
 	public static void removePlayerFromGame(ServerPlayerEntity player) {
 		playersTurn.remove(player);
+		playerMove.remove(player);
+		playerCount--;
 	}
 
 	public static boolean isPlayerInGame(ServerPlayerEntity player) {
@@ -77,11 +86,32 @@ public class GameTrackerManager {
 	}
 
 	public static void setmainPlayerpos(ServerPlayerEntity player) {
-		playerMove.get(player).setMain(player.getPos());
+		playerMove.get(player).setMain(player.getBlockPos());
+	}
+
+	public static void setmainPlayerPosServerWide(MinecraftServer server) {
+		for (ServerPlayerEntity player : PlayerLookup.all(server)) {
+			setmainPlayerpos(player);
+			getPlayerMovementSpeed(player).resetMovement();
+		}
 	}
 
 	public static void nextTurn() {
 		currTurn++;
+		if (currTurn > playerCount) {
+			currTurn = 1;
+		}
+	}
+
+	public static int getCurrTurn() {
+		return currTurn;
+	}
+
+	public static void endGame(MinecraftServer server) {
+		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+			player.sendMessage(Text.literal("Game has ended"), false);
+		}
+		gameStarted = false;
 	}
 
 }

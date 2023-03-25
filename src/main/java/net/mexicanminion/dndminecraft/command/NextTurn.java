@@ -10,17 +10,17 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 
-public class StartGame {
+public class NextTurn {
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext commandBuildContext, CommandManager.RegistrationEnvironment registrationEnvironment) {
-		dispatcher.register(CommandManager.literal("startgame")
-				.executes(context -> run(context, context.getSource())));
+		dispatcher.register(CommandManager.literal("nextturn")
+				.executes(context -> run(context)));
 	}
 
-	private static int run(CommandContext<ServerCommandSource> contextScreen, ServerCommandSource context) throws CommandSyntaxException {
+	private static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 
-		GameTrackerManager.startGame(context.getServer());
-		contextScreen.getSource().sendFeedback(Text.literal("Game Start"), true);
+		GameTrackerManager.nextTurn();
+		context.getSource().sendFeedback(Text.literal("Turn: " + GameTrackerManager.getCurrTurn()), true);
 
 		return 1;
 	}

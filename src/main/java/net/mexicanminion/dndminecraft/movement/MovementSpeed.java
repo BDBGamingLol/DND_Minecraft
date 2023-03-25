@@ -2,7 +2,7 @@ package net.mexicanminion.dndminecraft.movement;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.BlockPos;
 
 public class MovementSpeed {
 
@@ -13,6 +13,7 @@ public class MovementSpeed {
 	int oldXPoint;
 	int oldZPoint;
 	int speed;
+	private boolean resetMovementFlag = true;
 	PlayerEntity player;
 
 	public MovementSpeed(int speed, PlayerEntity player) {
@@ -20,45 +21,50 @@ public class MovementSpeed {
 		this.player = player;
 	}
 
-	public void setMain(Vec3d playerPos) {
-		this.mainXPoint = (int)(playerPos.x);
-		this.mainZPoint = (int)(playerPos.z);
+	public void setMain(BlockPos playerPos) {
+		this.mainXPoint = playerPos.getX();
+		this.mainZPoint = playerPos.getZ();
 		currentXPoint = mainXPoint;
 		currentZPoint = mainZPoint;
+		oldXPoint = mainXPoint;
+		oldZPoint = mainZPoint;
+		if(resetMovementFlag) {
+			resetMovementFlag = false;
+		}
 	}
 
 	public void updatePos(PlayerEntity player) {
-		if ((int) player.getX() != currentXPoint || (int)player.getZ() != currentZPoint) {
+		int liveX = player.getBlockX();
+		int liveZ = player.getBlockZ();
+		if (liveX != currentXPoint || liveZ != currentZPoint) {
 			oldXPoint = currentXPoint;
 			oldZPoint = currentZPoint;
-			currentXPoint = (int) player.getX();
-			currentZPoint = (int)player.getZ();
+			currentXPoint = liveX;
+			currentZPoint = liveZ;
 		}
 	}
 
 	public int getMovement() {
 		int movement;
-		int x = Math.abs(Math.abs(currentXPoint) - Math.abs(mainXPoint));
-		int z = Math.abs(Math.abs(currentZPoint) - Math.abs(mainZPoint));
+		int x = Math.abs(currentXPoint - mainXPoint);
+		int z = Math.abs(currentZPoint - mainZPoint);
 
 		movement = x + z;
 		return movement;
 	}
 
 	public void checkMovement() {
+		updatePos(player);
 		player.sendMessage(Text.literal("Movement: " + getMovement()), false);
-		player.sendMessage(Text.literal("Curr X: " + currentXPoint), false);
-		player.sendMessage(Text.literal("Curr Y: " + currentZPoint), false);
-		if (getMovement() > speed) {
-			if(oldXPoint < 0 || oldZPoint < 0)
-				player.teleport(oldXPoint, player.getY(), oldZPoint);
-			else if(oldXPoint > 0 || oldZPoint > 0)
-				player.teleport(oldXPoint, player.getY(), oldZPoint);
+		if (getMovement() > speed)
+			player.teleport(oldXPoint + 0.5, player.getY(), oldZPoint + 0.5);
+		resetMovementFlag = true;
+	}
 
-			updatePos(player);
-		}else {
-			updatePos(player);
-		}
+	public void resetMovement() {
+		if(resetMovementFlag)
+			setMain(player.getBlockPos());
+		player.teleport(oldXPoint + 0.5, player.getBlockY(), oldZPoint + 0.5);
 	}
 
 	public void setSpeed(int speed) {

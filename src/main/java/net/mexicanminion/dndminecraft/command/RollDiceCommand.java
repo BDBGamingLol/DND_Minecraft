@@ -18,7 +18,6 @@ import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 
 public class RollDiceCommand{
 
-	static int amount;
 	static DiceSystem diceSystem = new DiceSystem();
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext commandBuildContext, RegistrationEnvironment registrationEnvironment) {

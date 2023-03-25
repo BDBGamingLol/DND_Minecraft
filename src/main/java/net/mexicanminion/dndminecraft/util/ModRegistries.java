@@ -1,14 +1,13 @@
 package net.mexicanminion.dndminecraft.util;
 
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.mexicanminion.dndminecraft.command.AddPlayer;
+import net.mexicanminion.dndminecraft.command.NextTurn;
 import net.mexicanminion.dndminecraft.command.RollDiceCommand;
 import net.mexicanminion.dndminecraft.command.StartGame;
 import net.mexicanminion.dndminecraft.managers.GameTrackerManager;
-import net.minecraft.util.ActionResult;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
 import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents;
 
-import static net.minecraft.server.command.CommandManager.*;
 
 public class ModRegistries {
 
@@ -21,6 +20,8 @@ public class ModRegistries {
 
 		CommandRegistrationCallback.EVENT.register(RollDiceCommand::register);
 		CommandRegistrationCallback.EVENT.register(StartGame::register);
+		CommandRegistrationCallback.EVENT.register(AddPlayer::register);
+		CommandRegistrationCallback.EVENT.register(NextTurn::register);
 
 	}
 
