@@ -20,7 +20,6 @@ public class StartGame {
 	private static int run(CommandContext<ServerCommandSource> contextScreen, ServerCommandSource context) throws CommandSyntaxException {
 
 		GameTrackerManager.startGame(context.getServer());
-		contextScreen.getSource().sendFeedback(Text.literal("Game Start"), true);
 
 		return 1;
 	}

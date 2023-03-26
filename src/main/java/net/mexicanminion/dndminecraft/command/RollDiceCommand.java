@@ -22,7 +22,7 @@ public class RollDiceCommand{
 
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext commandBuildContext, RegistrationEnvironment registrationEnvironment) {
 		dispatcher.register(CommandManager.literal("rolldice")
-				.then(argument("amount", integer())
+				.then(argument("amount", integer(1, 100))
 						.then(argument("dice", integer(4, 100))
 								.executes(context -> run(context, context.getSource(), getInteger(context, "amount"), getInteger(context, "dice"))))));
 	}
