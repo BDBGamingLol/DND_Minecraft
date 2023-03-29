@@ -11,7 +11,7 @@ public class DNDMinecraftClient implements ClientModInitializer{
 	public void onInitializeClient(ModContainer mod) {
 		// TODO Auto-generated method stub
 		DNDMinecraft.LOGGER.info("Javier M", mod.metadata().name());
-		MinecraftClient.getInstance().setScreen(new CreateCharacterScreen());
+		//MinecraftClient.getInstance().setScreen(new CreateCharacterScreen());
 
 	}
 }
