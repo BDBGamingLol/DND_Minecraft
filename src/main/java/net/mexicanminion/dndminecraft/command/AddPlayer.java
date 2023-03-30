@@ -3,7 +3,6 @@ package net.mexicanminion.dndminecraft.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mexicanminion.dndminecraft.gui.CreateCharacterScreen;
 import net.mexicanminion.dndminecraft.managers.GameTrackerManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandBuildContext;
@@ -26,7 +25,6 @@ public class AddPlayer {
 	private static int run(CommandContext<ServerCommandSource> context, int speed) throws CommandSyntaxException {
 
 		GameTrackerManager.addPlayerToGame(context.getSource().getPlayer(), speed);
-		MinecraftClient.getInstance().setScreen(new CreateCharacterScreen());
 		context.getSource().sendFeedback(Text.literal("You have been added "), true);
 
 		return 1;
