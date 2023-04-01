@@ -7,7 +7,9 @@ import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateCharacterScreen extends BaseUIModelScreen<FlowLayout> {
@@ -15,12 +17,8 @@ public class CreateCharacterScreen extends BaseUIModelScreen<FlowLayout> {
 
 	public CreateCharacterScreen() {
 		super(FlowLayout.class, DataSource.file("create-character-screen.xml"));
+		//super(FlowLayout.class, DataSource.asset(new Identifier("dndminecraft", "create-character-screen.xml")));
 	}
-
-	/*@Override
-	protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-		return OwoUIAdapter.create(this, Containers::verticalFlow);
-	}*/
 
 	@Override
 	protected void build(FlowLayout rootComponent) {
@@ -39,6 +37,7 @@ public class CreateCharacterScreen extends BaseUIModelScreen<FlowLayout> {
 		);
 
 		 */
+
 	}
 }
 

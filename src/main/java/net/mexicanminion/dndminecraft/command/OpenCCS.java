@@ -21,7 +21,10 @@ public class OpenCCS {
 
 	private static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 
-		MinecraftClient.getInstance().setScreen(new CreateCharacterScreen());
+		//delay by 1 tick to prevent the game from crashing
+		MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new CreateCharacterScreen()));
+
+		//MinecraftClient.getInstance().setScreen(new CreateCharacterScreen());
 
 		return 1;
 	}
