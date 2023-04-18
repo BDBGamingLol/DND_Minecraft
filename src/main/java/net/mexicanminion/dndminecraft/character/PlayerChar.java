@@ -8,8 +8,8 @@ public class PlayerChar {
 	CharStats stats;
 	RaceType type;
 
-	public PlayerChar(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int race, String name, int subRace) {
-		stats = new CharStats(strength, dexterity, constitution, intelligence, wisdom, charisma);
+	public PlayerChar(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int level, int race, String name, int subRace) {
+		stats = new CharStats(strength, dexterity, constitution, intelligence, wisdom, charisma, level);
 		if (race == 1){
 			type = new Gnome(name, subRace);
 		}

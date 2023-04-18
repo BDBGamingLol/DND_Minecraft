@@ -9,13 +9,16 @@ public class CharStats {
 	private int wisdom;
 	private int charisma;
 
-	public CharStats(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma) {
+	private int level;
+
+	public CharStats(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma, int level) {
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.constitution = constitution;
 		this.intelligence = intelligence;
 		this.wisdom = wisdom;
 		this.charisma = charisma;
+		this.level = level;
 	}
 
 	public int getModifier(int stat){
@@ -24,15 +27,15 @@ public class CharStats {
 
 	public int getSavingThrow(int stat, boolean proficient){
 		if (proficient){
-			return getModifier(stat) + getProficiencyBonus();
+			return getModifier(stat) + getProficiencyBonus(level);
 		}
 		return getModifier(stat);
 	}
 
-	public int getProficiencyBonus(){
-		//TODO: Implement this
+	public int getProficiencyBonus(int lvl){
+		//floor(lvl-1)+2
 		//https://roll20.net/compendium/dnd5e/Character%20Advancement#content
-		return 2;
+		return (int) (Math.floor(lvl-1)+2);
 	}
 
 	public int getStrength() {
